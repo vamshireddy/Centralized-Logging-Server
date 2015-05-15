@@ -21,8 +21,6 @@ public class Monitor implements Runnable{
 			try {
 				if( buff.readLine().trim().equals("1") )
 				{
-					reader.cleanup();
-					writer.cleanup();
 					System.exit(0);
 				}
 			} catch (IOException e) {

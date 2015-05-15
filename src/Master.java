@@ -1,4 +1,3 @@
-
 /*
  * This is the Main class which is used to start the reader and writer threads
  */
@@ -53,6 +52,7 @@ class shutdownHook extends Thread
 	}
 	public void run()
 	{
+		
 		 System.out.println("Shutdown hook\n");
 	     reader.cleanup();
 	     writer.cleanup();

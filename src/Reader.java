@@ -13,14 +13,17 @@ public class Reader implements Runnable {
 	private DatagramSocket serverSock = null;
 	byte[] receiveData = new byte[1024];
 	DatagramPacket packet = null;
+	boolean running;
 	
 	public void cleanup()
 	{
 		serverSock.close();
+		running = false;
 	}
 	
 	public void run()
 	{
+		running = true;
 		/*
 		 * Create a UDP server socket to accept the incoming messages. 
 		 */
@@ -34,7 +37,7 @@ public class Reader implements Runnable {
 		 * Accept the incoming UDP packets
 		 */
 		System.out.println("Waiting for the packets");
-		while( true )
+		while( running == true )
 		{
 			packet = new DatagramPacket(receiveData, receiveData.length);
 			try
@@ -44,11 +47,8 @@ public class Reader implements Runnable {
 			catch( IOException ioe )
 			{
 				System.out.println("Error in receiving the packets");
+				ioe.printStackTrace();
 				System.exit(0);
-			}
-			finally
-			{
-				serverSock.close();
 			}
 			String sentence = new String(packet.getData());
 			String ipPort = packet.getAddress().toString() + " : " + packet.getPort();

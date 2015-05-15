@@ -5,11 +5,11 @@ import java.io.IOException;
 
 
 public class Writer implements Runnable{
-
 	private String fileName;
 	private File file;
 	FileWriter fileWriter;
     BufferedWriter bufferWriter;
+    boolean running;
     
 	public Writer()
 	{
@@ -35,7 +35,9 @@ public class Writer implements Runnable{
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			System.exit(0);
 		}
+		running = true;
 	}
 	
 	public void cleanup()
@@ -46,39 +48,26 @@ public class Writer implements Runnable{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		running = false;
 	}
 	
 	public void run()
 	{
-		try
+		while( running == true )
 		{
-			while( true )
+			while( Queue.length() <= 0 )
 			{
-				while( Queue.length() <= 0 )
-				{
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-				LogData data = Queue.Dequeue();
-				if( data != null && !data.equals("") )
-				{
-					writeToFile(data.toString());
-
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
-		}
-		finally
-		{
-			try {
-				bufferWriter.close();
-				fileWriter.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			LogData data = Queue.Dequeue();
+			if( data != null && !data.equals("") )
+			{
+				writeToFile(data.toString());
 			}
 		}
 	}
@@ -91,6 +80,8 @@ public class Writer implements Runnable{
 			bufferWriter.write(System.lineSeparator());
 		} catch (IOException e) {
 			e.printStackTrace();
+			System.out.println("Can't write to the file\n");
+			System.exit(0);
 		}
 	}
 }
