@@ -1,14 +1,13 @@
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
 
 public class Writer implements Runnable{
+	private static long logCount = 0;
 	private String fileName;
 	private File file;
 	FileWriter fileWriter;
-    BufferedWriter bufferWriter;
     boolean running;
     
 	public Writer()
@@ -31,7 +30,6 @@ public class Writer implements Runnable{
 		}
 		try {
 			fileWriter = new FileWriter(file.getName(),true);
-			bufferWriter = new BufferedWriter(fileWriter);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -43,7 +41,7 @@ public class Writer implements Runnable{
 	public void cleanup()
 	{
 		try {
-			bufferWriter.close();
+			fileWriter.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -64,20 +62,30 @@ public class Writer implements Runnable{
 					e.printStackTrace();
 				}
 			}
-			LogData data = Queue.Dequeue();
+			String data = Queue.Dequeue();
 			if( data != null && !data.equals("") )
 			{
-				writeToFile(data.toString());
+				writeToFile(data);
+				try {
+					fileWriter.flush();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				Writer.logCount++;
 			}
 		}
 	}
 	
+	public static long getLogCount()
+	{
+		return logCount;
+	}
+	
 	public void writeToFile(String str)
 	{
-		System.out.println("LOG:"+str);
 		 try {
-			bufferWriter.write(str);
-			bufferWriter.write(System.lineSeparator());
+			fileWriter.write(str);
+			fileWriter.write(System.lineSeparator());
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Can't write to the file\n");

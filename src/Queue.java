@@ -1,23 +1,35 @@
-import java.util.PriorityQueue;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
-
+/*
+ * Queue data structure is the common place for both reader and writer thread to share data. Reader thread is a producer, which reads the log
+ * from the socket and enqueues it to the queue. Writer thread will dequeue and write it to a file.
+ */
 public class Queue {
-	private static java.util.Queue<LogData> q;
+
+	private static BlockingQueue<String> q;
 	static
 	{
-		q = new PriorityQueue<LogData>();
+		q = new ArrayBlockingQueue<String>(100000);
 	}
-	public static void Enqueue(LogData data)
+	public static void Enqueue(String data)
 	{
-		synchronized (q) {
-			Queue.q.add(data);
+		try {
+			q.put(data);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
-	public static LogData Dequeue()
+	public static String Dequeue()
 	{
-		synchronized (q) {
-			return q.remove();
+		try {
+			return Queue.q.take();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		return null;
 	}
 	public static int length()
 	{
