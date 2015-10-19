@@ -14,4 +14,4 @@ Message Logging Server which runs on UDP protocol with reliability.
 
 ## Log format
 
-<TIMESTAMP> : <IPADDRESS> : <PORT> : <MSG> 
+TIMESTAMP : IPADDRESS : PORT : MSG
