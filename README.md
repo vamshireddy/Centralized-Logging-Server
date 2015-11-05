@@ -7,11 +7,19 @@ Message Logging Server which runs on UDP protocol with reliability.
 * Common Queue between reader and writer threads is implemented to share data.
 * It orders all the logs according to the sequence numbers present in the messages and stores the timestamp.
 
+## How to run
+#### Using Eclipse
+1. Add this project repository as a project in Eclipse. 
+2. Then compile it and run.
+
+#### Without Eclipse
+1. Compile all of the files in the repo together using the command `javac <file_names>`
+2. Run the Master class by this commmand `java Master`
+
 ## Protocol
 * REGISTER message - it is sent by the client along with the sequence number to set up the state on the server. Server creates a data stucture with this sequence number and expects the logs. 
 * DEREGISTER message - it is sent by the client to remove its state on the server. This is usually sent when the client shutsdown.
 * LOG message - it is sent by the client along with the message to be logged.
 
 ## Log format
-
 TIMESTAMP : IPADDRESS : PORT : MSG
